@@ -14,7 +14,7 @@ function addDemo(row) {
     for (const key of ['Number', 'Issued', 'Due']) {
       if (!(key in row)) { row[key] = key; }
     }
-    for (const key of ['Subtotal', 'Deduction', 'Taxes', 'Total']) {
+    for (const key of ['Subtotal', 'Taxes', 'Total']) {
       if (!(key in row)) { row[key] = key; }
     }
     if (!('Note' in row)) { row.Note = '(Anything in a Note column goes here)'; }
@@ -49,7 +49,6 @@ function addDemo(row) {
         Quantity: '.Quantity',
         Total: '.Total',
         Price: '.Price',
-        Deduction: '.Deduction',
         VATRate: '.VATrate',
         Taxes: '.Taxes',
       },
@@ -58,7 +57,6 @@ function addDemo(row) {
         Quantity: '.Quantity',
         Total: '.Total',
         Price: '.Price',
-        Deduction: '.Deduction',
         VATRate: '.VATrate',
         Taxes: '.Taxes',
       },
@@ -161,7 +159,7 @@ function updateInvoice(row) {
     const want = new Set(Object.keys(addDemo({})));
     const accepted = new Set(['References']);
     const importance = ['Number', 'Client', 'Items', 'Total', 'Invoicer', 'Due', 
-                        'Issued', 'Subtotal', 'Deduction', 'Taxes', 'Note', 'Paid'];
+                        'Issued', 'Subtotal', 'Taxes', 'Note', 'Paid'];
     if (!('Due' in row || 'Issued' in row)) {
       const seen = new Set(Object.keys(row).filter(k => k !== 'id' && k !== '_error_'));
       const help = row.Help = {};
@@ -186,7 +184,7 @@ function updateInvoice(row) {
     if (!row.Subtotal && !row.Total && row.Items && Array.isArray(row.Items)) {
       try {
         row.Subtotal = row.Items.reduce((a, b) => a + b.Price * b.Quantity, 0);
-        row.Total = row.Subtotal + (row.Taxes || 0) - (row.Deduction || 0);
+        row.Total = row.Subtotal + (row.Taxes || 0);
       } catch (e) {
         console.error(e);
       }
