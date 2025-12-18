@@ -49,12 +49,18 @@ function addDemo(row) {
         Quantity: '.Quantity',
         Total: '.Total',
         Price: '.Price',
+        Deduction: '.Deduction',
+        VATRate: '.VATrate',
+        Taxes: '.Taxes',
       },
       {
         Description: 'Items[1].Description',
         Quantity: '.Quantity',
         Total: '.Total',
         Price: '.Price',
+        Deduction: '.Deduction',
+        VATRate: '.VATrate',
+        Taxes: '.Taxes',
       },
     ];
   }
