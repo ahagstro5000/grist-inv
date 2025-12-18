@@ -71,16 +71,16 @@ const data = {
 };
 let app = undefined;
 
-Vue.filter('currency', formatNumberAsUSD)
-function formatNumberAsUSD(value) {
+Vue.filter('currency', formatNumberAsCHF)
+function formatNumberAsCHF(value) {
   if (typeof value !== "number") {
     return value || '—';      // falsy value would be shown as a dash.
   }
   value = Math.round(value * 100) / 100;    // Round to nearest cent.
   value = (value === -0 ? 0 : value);       // Avoid negative zero.
 
-  const result = value.toLocaleString('en', {
-    style: 'currency', currency: 'USD'
+  const result = value.toLocaleString('de-CH', {
+    style: 'currency', currency: 'CHF'
   })
   if (result.includes('NaN')) {
     return value;
