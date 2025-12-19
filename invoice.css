@@ -22,6 +22,7 @@ a {
   background-color: white;
   color: black;
   padding: 16px;
+  vertical-align: top;
 }
 
 /* Meta info */
