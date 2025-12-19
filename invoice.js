@@ -53,7 +53,7 @@ function addDemo(row) {
         Quantity: '.Quantity',
         Total: '.Total',
         Price: '.Price',
-        VATRate: '.VATrate',
+        VatRate: '.VatRate',
         Taxes: '.Taxes',
       },
       {
@@ -61,7 +61,7 @@ function addDemo(row) {
         Quantity: '.Quantity',
         Total: '.Total',
         Price: '.Price',
-        VATRate: '.VATrate',
+        VatRate: '.VatRate',
         Taxes: '.Taxes',
       },
     ];
