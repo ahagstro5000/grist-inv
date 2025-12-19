@@ -4,16 +4,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
+  <meta name="description" content="Template for displaying invoices (QR-Rechnung) in a Grist custom widget.">
   <title>QR-Rechnung</title>
 
   <!-- A template for showing an invoice in a Custom Widget in Grist. -->
   <!-- Uses Vue.js, moment, and the Grist Plugin API -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
-  <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.7.16/vue.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.10/moment.min.js" defer></script>
+  <script src="https://docs.getgrist.com/grist-plugin-api.js" defer></script>
 
-  <script src="invoice.js"></script>
-  <script src="exampleData.js"></script>
+  <script src="invoice.js" defer></script>
+  <script src="exampleData.js" defer></script>
 
   <link rel="stylesheet" href="invoice.css">
 </head>
@@ -68,7 +69,8 @@
                  </template>
                </template>
              </div>
-
+            </td>
+          </tr>
           <tr>
             <td class="absender">Mark Bachmann, Kronengasse 4, 5000 Aarau</td>
             <td class="col-50">
@@ -78,8 +80,7 @@
           </tr>
          <tr>
            <td class="col-50">
-             <div class="kopf"
-               v-for="business in Array.isArray(invoice.Client) ? invoice.Client : (invoice.Client ? [invoice.Client] : [])">
+             <div v-for="business in Array.isArray(invoice.Client) ? invoice.Client : (invoice.Client ? [invoice.Client] : [])">
                <template v-if="typeof(business) === 'string'">
                  <div class="newlined">{{ business }}</div>
                </template>
@@ -129,9 +130,9 @@
            <th class="alright">Total</th>
          </tr>
          <tr v-for="item in invoice.Items">
+           <td class="alright">{{ item.Quantity }}</td>
            <td>{{ item.Description }}</td>
            <td class="alright">{{ item.Price | currency }}</td>
-           <td class="alright">{{ item.Quantity }}</td>
            <td class="alright">{{ item.Total | currency }}</td>
          </tr>
        </template>
@@ -194,9 +195,8 @@
      </div>
 
      <div class="print">
-       <a href="javascript:window.print()">Print</a>
+       <button class="print-btn" type="button" onclick="window.print()" aria-label="Print invoice">Print</button>
      </div>
-     </template>
    </div>
   </div>
 </body>
