@@ -71,8 +71,7 @@ function addDemo(row) {
 
 const data = {
   count: 0,
-  invoice: '',
-  status: 'waiting',
+  invoice: {},
   tableConnected: false,
   rowConnected: false,
   haveRows: false,
@@ -103,6 +102,9 @@ function fallback(value, str) {
 }
 
 function asDate(value) {
+  if (value === undefined || value === null || value === '') {
+    return value || '—';
+  }
   if (typeof(value) === 'number') {
     value = new Date(value * 1000);
   }
@@ -122,7 +124,6 @@ function handleError(err) {
   console.error(err);
   const target = app || data;
   target.invoice = '';
-  target.status = String(err).replace(/^Error: /, '');
   console.log(data);
 }
 
@@ -145,7 +146,6 @@ function prepareList(lst, order) {
 
 function updateInvoice(row) {
   try {
-    data.status = '';
     if (row === null) {
       throw new Error("(No data - not on row - please add or select a row)");
     }
@@ -215,25 +215,22 @@ function updateInvoice(row) {
 }
 
 ready(function() {
-  // Update the invoice anytime the document data changes.
-  grist.ready();
-  grist.onRecord(updateInvoice);
-
-  // Monitor status so we can give user advice.
-  grist.on('message', msg => {
-    // If we are told about a table but not which row to access, check the
-    // number of rows.  Currently if the table is empty, and "select by" is
-    // not set, onRecord() will never be called.
-    if (msg.tableId && !app.rowConnected) {
-      grist.docApi.fetchSelectedTable().then(table => {
-        if (table.id && table.id.length >= 1) {
-          app.haveRows = true;
-        }
-      }).catch(e => console.log(e));
+  // Update the invoice anytime the document data changes (if Grist is available).
+  if (typeof grist !== 'undefined' && grist) {
+    grist.ready();
+    grist.onRecord(updateInvoice);
+  } else {
+    console.log('grist not found - running in local preview');
+    // For local preview, show demo data so the invoice is visible. Only do this if
+    // exampleData is available.
+    if (typeof exampleData !== 'undefined') {
+      try {
+        updateInvoice(exampleData);
+      } catch (e) {
+        console.warn('Could not apply exampleData', e);
+      }
     }
-    if (msg.tableId) { app.tableConnected = true; }
-    if (msg.tableId && !msg.dataChange) { app.rowConnected = true; }
-  });
+  }
 
   const vueApp = Vue.createApp({
     data() { return data; },
