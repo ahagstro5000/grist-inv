@@ -6,7 +6,8 @@ body {
 }
 
 a {
-  color: #0000EE;
+  color: #000;
+  text-decoration: none;
 }
 
 /* Column widths */
@@ -175,12 +176,12 @@ div.summary::after {
 }
 
 .phone::before {
-  content: "\260e";
+  content: "Tel";
   margin-right: 0.5em;
 }
 
 .email::before {
-  content: "\2709";
+  content: "E-Mail";
   margin-right: 0.5em;  
 }
 

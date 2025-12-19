@@ -38,24 +38,27 @@
         {{ status }}
       </template>
     </div>
-    <div class="invoice" v-if="invoice">
-      <template v-if="invoice">
-       <div class="supplier">
-          <div v-for="business in (invoice.Invoicer ? [invoice.Invoicer] : [])">
-             <template v-if="typeof(business) === 'string'">
+
+
+    <table class="kopf">
+      <tbody>
+        <tr>
+          <td class="col-50">
+            <img src="https://mark-bachmann.ch/images/logo.jpg" alt="Chocolats de Luxe Mark Bachmann" width="320">
+          </td>
+          <td class="col-50">
+            <div v-for="business in (invoice.Invoicer ? [invoice.Invoicer] : [])">
+              <template v-if="typeof(business) === 'string'">
                 <div class="address newlined">{{ business }}</div>
-             </template>
-             <template v-else>
+              </template>
+              <template v-else>
                 <div class="address">
                   <span class="name">{{ business.Name }}</span><br />
                   {{ business.Street1 }}<br />
                   <template v-if="business.Street2">
                     {{ business.Street2 }}<br />
                   </template>
-                    {{ business.Zip }} {{ business.City }} {{ business.State }}<br />
-                  <template v-if="business.Country">
-                    {{ business.Country }}<br />
-                  </template>
+                  {{ business.City }} {{ business.State }} {{ business.Zip }}<br />
                 </div>
                 <template v-if="business.Email">
                   <div class="email">{{ business.Email }}</div>
@@ -66,175 +69,138 @@
                 <template v-if="business.Website">
                   <div class="website"><a v-bind:href="business.Url">{{ business.Website }}</a></div>
                 </template>
-             </template>
-            </div>
-          </div>
-       </div>
-
-        <table class="kopf">
-          <tbody>
-            <tr>
-              <td class="col-50">
-                <img src="https://mark-bachmann.ch/images/logo.jpg" alt="Chocolats de Luxe Mark Bachmann" width="320">
-              </td>
-              <td class="col-50">
-                <div v-for="business in (invoice.Invoicer ? [invoice.Invoicer] : [])">
-                  <template v-if="typeof(business) === 'string'">
-                    <div class="address newlined">{{ business }}</div>
-                  </template>
-                  <template v-else>
-                    <div class="address">
-                      <span class="name">{{ business.Name }}</span><br />
-                      {{ business.Street1 }}<br />
-                      <template v-if="business.Street2">
-                        {{ business.Street2 }}<br />
-                       </template>
-                      {{ business.City }} {{ business.State }} {{ business.Zip }}<br />
-                      <template v-if="business.Country">
-                        {{ business.Country }}<br />
-                      </template>
-                    </div>
-                    <template v-if="business.Email">
-                      <div class="email">{{ business.Email }}</div>
-                    </template>
-                    <template v-if="business.Phone">
-                      <div class="phone">{{ business.Phone }}</div>
-                    </template>
-                    <template v-if="business.Website">
-                      <div class="website"><a v-bind:href="business.Url">{{ business.Website }}</a></div>
-                    </template>
-                  </template>
-                </div>
-
-            <tr>
-              <td class="absender">Chocolats de Luxe Mark Bachmann, Kronengasse 4, 5000 Aarau</td>
-              <td class="col-50">
-                <div class="info"><span class="meta">MWST-Nr.</span>CHE-113.656.937 MWST</div>
-                <div class="info"><span class="meta">Konto</span>CH80 0076 1016 0128 8809 5</div>
-              </td>
-            </tr>
-            <tr>
-              <td class="col-50">
-                <div class="client"
-                  v-for="business in Array.isArray(invoice.Client) ? invoice.Client : (invoice.Client ? [invoice.Client] : [])">
-                  <template v-if="typeof(business) === 'string'">
-                    <div class="newlined">{{ business }}</div>
-                  </template>
-                  <template v-else>
-                    <div>{{ business.Name }}</div>
-                    <div v-if="business.Street1">{{ business.Street1 }}</div>
-                    <div v-if="business.Street2">{{ business.Street2 }}</div>
-                    <div>{{ business.Zip }} {{ business.City }} {{ business.State }}</div>
-                    <template v-if="business.Country">
-                      <br />{{ business.Country }}
-                    </template>
-                  </template>
-                </div>
-              </td>
-              <td class="col-50">
-                <div>
-                  <div class="info"><span class="meta">Rechnungsdatum</span>{{ invoice.Issued | asDate }}</div>
-                  <div class="info"><span class="meta">Rechnungsnummer</span>{{ invoice.Number }}</div>
-                  <div class="info"><span class="meta">Betrag</span>{{ invoice.Total | currency }}</div>
-                  <div class="info"><span class="meta">Bezahlbar bis</span>{{ invoice.Due | asDate }}</div>
-                  <div class="info"><span class="meta">Kundenreferenz</span>{{ invoice.Kundenref }}</div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div>
-          <div class="meta title">Rechnung</div>
-        </div>
-        <table class="items">
-          <template v-if="!Array.isArray(invoice.Items)">
-            <tr>
-              <th>Description</th>
-              <th class="alright">Total</th>
-            </tr>
-            <tr>
-              <td>{{ invoice.Items }}</td>
-              <td class="alright">{{ invoice.Total | currency }}</td>
-            </tr>
-          </template>
-          <template v-else>
-            <tr>
-              <th>Description</th>
-              <th class="alright">Unit Price</th>
-              <th class="alright">Quantity</th>
-              <th class="alright">Total</th>
-            </tr>
-            <tr v-for="item in invoice.Items">
-              <td>{{ item.Description }}</td>
-              <td class="alright">{{ item.Price | currency }}</td>
-              <td class="alright">{{ item.Quantity }}</td>
-              <td class="alright">{{ item.Total | currency }}</td>
-            </tr>
-          </template>
-        </table>
-
-        <div class="summary">
-          <div class="part">
-            <div class="title">Subtotal</div>
-            <div class="details">{{ invoice.Subtotal | currency }}</div>
-          </div>
-          <div class="part">
-            <div class="title">Taxes</div>
-            <div class="details">{{ invoice.Taxes | currency }}</div>
-          </div>
-          <div class="total">
-            <div class="title">Total</div>
-            <div class="details">{{ invoice.Total | currency }}</div>
-          </div>
-        </div>
-
-        <template v-if="invoice.Note">
-          <p class="note">{{ invoice.Note }}</p>
-        </template>
-
-        <template v-for="help in (invoice.Help ? [invoice.Help] : [])">
-          <div class="help">
-            <div class="help-close">
-              Add <span class="column-name">Due</span> or <span class="column-name">Issued</span> date to hide this
-              help.
-            </div>
-            <div class="title">Column information</div>
-            <div class="details">
-              <table>
-                <tr v-for="group in ['recognized', 'expected', 'ignored']">
-                  <td class="key">{{ group }}</td>
-                  <td>
-                    <template v-if="group in help">
-                      <div v-bind:class="['column-name', 'column-' + group]" v-for="col in help[group]">{{col}}</div>
-                    </template>
-                    <template v-else>
-                      &mdash;
-                    </template>
-                  </td>
-                </tr>
-              </table>
-              <template v-if="invoice.SuggestReferencesColumn">
-                <div>For structured address and item information, add a <span class="column-name">References</span>
-                  column with this formula:</div>
-                <div>
-                  <pre>RECORD(rec, expand_refs=1)</pre>
-                </div>
               </template>
             </div>
-          </div>
-        </template>
-        <div class="footer">
-          <div class="thanks">
-            Herzlichen Dank für den geschätzten Auftrag!
-          </div>
-        </div>
 
-        <div class="print">
-          <a href="javascript:window.print()">Print</a>
-        </div>
-      </template>
+        <tr>
+          <td class="absender">Mark Bachmann, Kronengasse 4, 5000 Aarau</td>
+          <td class="col-50">
+            <div class="info"><span class="meta">MWST-Nr.</span>CHE-113.656.937 MWST</div>
+            <div class="info"><span class="meta">Konto</span>CH80 0076 1016 0128 8809 5</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="col-50">
+            <div class="client"
+              v-for="business in Array.isArray(invoice.Client) ? invoice.Client : (invoice.Client ? [invoice.Client] : [])">
+              <template v-if="typeof(business) === 'string'">
+                <div class="newlined">{{ business }}</div>
+              </template>
+              <template v-else>
+                <div>{{ business.Name }}</div>
+                <div v-if="business.Street1">{{ business.Street1 }}</div>
+                <div v-if="business.Street2">{{ business.Street2 }}</div>
+                <div>{{ business.Zip }} {{ business.City }} {{ business.State }}</div>
+                <template v-if="business.Country">
+                  <br />{{ business.Country }}
+                </template>
+              </template>
+            </div>
+          </td>
+          <td class="col-50">
+            <div>
+              <div class="info"><span class="meta">Rechnungsdatum</span>{{ invoice.Issued | asDate }}</div>
+              <div class="info"><span class="meta">Rechnungsnummer</span>{{ invoice.Number }}</div>
+              <div class="info"><span class="meta">Betrag</span>{{ invoice.Total | currency }}</div>
+              <div class="info"><span class="meta">Bezahlbar bis</span>{{ invoice.Due | asDate }}</div>
+              <div class="info"><span class="meta">Kundenreferenz</span>{{ invoice.Kundenref }}</div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div>
+      <div class="meta title">Rechnung</div>
     </div>
+    <table class="items">
+      <template v-if="!Array.isArray(invoice.Items)">
+        <tr>
+          <th>Description</th>
+          <th class="alright">Total</th>
+        </tr>
+        <tr>
+          <td>{{ invoice.Items }}</td>
+          <td class="alright">{{ invoice.Total | currency }}</td>
+        </tr>
+      </template>
+      <template v-else>
+        <tr>
+          <th>Description</th>
+          <th class="alright">Unit Price</th>
+          <th class="alright">Quantity</th>
+          <th class="alright">Total</th>
+        </tr>
+        <tr v-for="item in invoice.Items">
+          <td>{{ item.Description }}</td>
+          <td class="alright">{{ item.Price | currency }}</td>
+          <td class="alright">{{ item.Quantity }}</td>
+          <td class="alright">{{ item.Total | currency }}</td>
+        </tr>
+      </template>
+    </table>
+
+    <div class="summary">
+      <div class="part">
+        <div class="title">Subtotal</div>
+        <div class="details">{{ invoice.Subtotal | currency }}</div>
+      </div>
+      <div class="part">
+        <div class="title">Taxes</div>
+        <div class="details">{{ invoice.Taxes | currency }}</div>
+      </div>
+      <div class="total">
+        <div class="title">Total</div>
+        <div class="details">{{ invoice.Total | currency }}</div>
+      </div>
+    </div>
+
+    <template v-if="invoice.Note">
+      <p class="note">{{ invoice.Note }}</p>
+    </template>
+
+    <template v-for="help in (invoice.Help ? [invoice.Help] : [])">
+      <div class="help">
+        <div class="help-close">
+          Add <span class="column-name">Due</span> or <span class="column-name">Issued</span> date to hide this
+          help.
+        </div>
+        <div class="title">Column information</div>
+        <div class="details">
+          <table>
+            <tr v-for="group in ['recognized', 'expected', 'ignored']">
+              <td class="key">{{ group }}</td>
+              <td>
+                <template v-if="group in help">
+                  <div v-bind:class="['column-name', 'column-' + group]" v-for="col in help[group]">{{col}}</div>
+                </template>
+                <template v-else>
+                  &mdash;
+                </template>
+              </td>
+            </tr>
+          </table>
+          <template v-if="invoice.SuggestReferencesColumn">
+            <div>For structured address and item information, add a <span class="column-name">References</span>
+              column with this formula:</div>
+            <div>
+              <pre>RECORD(rec, expand_refs=1)</pre>
+            </div>
+          </template>
+        </div>
+      </div>
+    </template>
+    <div class="footer">
+      <div class="thanks">
+        Herzlichen Dank für den geschätzten Auftrag!
+      </div>
+    </div>
+
+    <div class="print">
+      <a href="javascript:window.print()">Print</a>
+    </div>
+    </template>
+  </div>
   </div>
 </body>
 
