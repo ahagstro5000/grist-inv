@@ -1,14 +1,24 @@
+:root {
+  --accent: #4682B4;
+  --accent-alt: #C83200;
+  --muted-bg: #f8f8f8;
+  --text: #000;
+  --help-bg: #000;
+  --help-text: #fff;
+}
+
 body {
   font-family: Arial, Helvetica, sans-serif;
   max-width: 800px;
   margin: 0 auto;
   padding: 5px;
+  color: var(--text);
 }
 
 a {
-  color: #000;
+  color: var(--text);
   text-decoration: none;
-}
+} 
 
 /* Column widths */
 .col-15 { width: 15%; }
@@ -31,9 +41,10 @@ a {
 }
 
 .title {
-font-weight: bold;
-margin-top: 3em;
-}
+  font-weight: bold;
+  margin-top: 3em;
+  margin-left: 4px;
+} 
 
 .info .meta {
   font-weight: normal;
@@ -46,9 +57,9 @@ margin-top: 3em;
 /* Supplier */
 
 .supplier {
-  color: #4682B4;
+  color: var(--accent);
   display: block;
-}
+} 
 
 .block {
   padding-left: 5px;
@@ -63,17 +74,15 @@ margin-top: 3em;
 }
 
 /* Add spacing between sections */
-.client, .items, .summary {
+.items, .summary {
   margin: 1em 0;
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
 }
 
-.client .title, .summary .title {
-  margin-left: 4px;
-}
 
-.client .details, .summary .details {
+
+.summary .details {
   padding: 4px;
 }
 
@@ -82,7 +91,7 @@ table {
   width: 100%;
   border: none;
   border-collapse: collapse;
-  padding: 0 0 0.4em 0.2em
+  padding: 0 0 0.4em 0.2em;
 }
 
 .kopf th {
@@ -96,17 +105,17 @@ table {
 }
 
 .items {
-  border: 1px solid #f8f8f8;
+  border: 1px solid var(--muted-bg);
   padding: 0;
   font-size: 13px;
-}
+} 
 
 .items th {
-  background: #f8f8f8;
+  background: var(--muted-bg);
   font-weight: bold;
-}
+} 
 
-.client .title, .summary .title, .help .title {
+.summary .title, .help .title {
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -149,9 +158,10 @@ div.summary .part {
 
 div.summary .total {
   display: block;
-  font-weight: bold;}
+  font-weight: bold;
+}
 
-  div.summary .title, div.summary .details {
+div.summary .title, div.summary .details {
   text-align: right;
 }
 
@@ -197,21 +207,21 @@ div.print {
 }
 
 div.print a {
-  background: #C83200;
+  background: var(--accent-alt);
   display: block;
   font-size: 200%;
-  color: white;
+  color: var(--help-text);
   text-decoration: none;
   padding: 0.25em;
   padding-top: 0.5em;
   padding-right: 0.5em;
   border-top-right-radius: 0.5em;
   text-transform: uppercase;
-}
+} 
 
 div.print a:hover {
-  background: #4682B4;
-}
+  background: var(--accent);
+} 
 
 .done {
   text-decoration: line-through;
@@ -222,20 +232,20 @@ div.column-name {
 }
 
 .column-name {
-  background: blue;
+  background: var(--accent);
   color: white;
   margin: 2px;
   padding: 2px;
   border-radius: 2px;
   font-style: normal;
-}
+} 
 
 .column-recognized {
   background: green;
 }
 
 .column-expected {
-  background: blue;
+  background: var(--accent);
 }
 
 .column-ignored {
@@ -244,27 +254,15 @@ div.column-name {
 
 .help {
   padding: 1px;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  background: black;
-  color: white;
+  margin: 1em 0;
+  background: var(--help-bg);
+  color: var(--help-text);
 }
 
-.help .details {
-  padding: 4px;
-}
-
-.help table {
-  border: none;
-}
-
-.help td.key {
-  text-align: right;
-}
-
-.help table {
-  padding-bottom: 3px;
-}
+.help .details { padding: 4px; }
+.help table { border: none; padding-bottom: 3px; }
+.help td.key { text-align: right; }
+.help .title { margin-left: 4px; text-transform: uppercase; } 
 
 .help-close {
   float: right;
@@ -284,10 +282,7 @@ div.column-name {
   margin-left: 1em;
 }
 
-.help .title {
-  margin-left: 4px;
-  text-transform: uppercase;
-}
+
 
 .status {
   padding: 4px;

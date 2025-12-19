@@ -58,13 +58,13 @@
                    <template v-if="business.Street2">
                      {{ business.Street2 }}<br />
                    </template>
-                   {{ business.City }} {{ business.State }} {{ business.Zip }}<br />
+                    {{ business.Zip }} {{ business.City }}<br />
                  </div>
-                 <template v-if="business.Email">
-                   <div class="email">{{ business.Email }}</div>
-                 </template>
                  <template v-if="business.Phone">
                    <div class="phone">{{ business.Phone }}</div>
+                 </template>
+                 <template v-if="business.Email">
+                   <div class="email">{{ business.Email }}</div>
                  </template>
                </template>
              </div>
@@ -78,7 +78,7 @@
           </tr>
          <tr>
            <td class="col-50">
-             <div class="client"
+             <div class="kopf"
                v-for="business in Array.isArray(invoice.Client) ? invoice.Client : (invoice.Client ? [invoice.Client] : [])">
                <template v-if="typeof(business) === 'string'">
                  <div class="newlined">{{ business }}</div>
