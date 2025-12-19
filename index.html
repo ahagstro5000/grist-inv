@@ -78,19 +78,36 @@
                 <img src="https://mark-bachmann.ch/images/logo.jpg" v-bind:alt="Invoicer.Name" width="320">
               </td>
               <td class="col-50">
-                <div class="info">{{ Invoicer.Name }}</div>
-                <div class="info">{{ Invoicer.Street1 }}</div>
-                <div class="info">{{ Invoicer.Zip }} {{ Invoicer.City }}</div>
-                <br>
-                <div class="info"><span class="meta">Tel</span>{{ Invoicer.Phone }}</div>
-                <div class="info"><span class="meta">E-Mail</span>
-                  <a href="'mailto:'+ Invoicer.Email">{{ Invoicer.Email }}</a>
+                <div v-for="business in (invoice.Invoicer ? [invoice.Invoicer] : [])">
+                  <template v-if="typeof(business) === 'string'">
+                    <div class="address newlined">{{ business }}</div>
+                  </template>
+                  <template v-else>
+                    <div class="address">
+                      <span class="name">{{ business.Name }}</span><br />
+                      {{ business.Street1 }}<br />
+                      <template v-if="business.Street2">
+                        {{ business.Street2 }}<br />
+                       </template>
+                      {{ business.City }} {{ business.State }} {{ business.Zip }}<br />
+                      <template v-if="business.Country">
+                        {{ business.Country }}<br />
+                      </template>
+                    </div>
+                    <template v-if="business.Email">
+                      <div class="email">{{ business.Email }}</div>
+                    </template>
+                    <template v-if="business.Phone">
+                      <div class="phone">{{ business.Phone }}</div>
+                    </template>
+                    <template v-if="business.Website">
+                      <div class="website"><a v-bind:href="business.Url">{{ business.Website }}</a></div>
+                    </template>
+                  </template>
                 </div>
-              </td>
-            </tr>
+
             <tr>
-              <td class="absender">{{ Invoicer.Name }}, {{ Invoicer.Street1 }}, {{ Invoicer.Zip }} {{ Invoicer.City }}
-              </td>
+              <td class="absender">Chocolats de Luxe Mark Bachmann, Kronengasse 4, 5000 Aarau</td>
               <td class="col-50">
                 <div class="info"><span class="meta">MWST-Nr.</span>{{ Invoicer.MWST_Nr }}</div>
                 <div class="info"><span class="meta">Konto</span>{{ Invoicer.Konto }}</div>
