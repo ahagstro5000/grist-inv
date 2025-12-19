@@ -96,7 +96,7 @@
            </td>
            <td class="col-50">
              <div>
-               <div class="info"><span class="meta">Rechnungsdatum</span>{{ invoice.Issued | asDate }}</div>
+                <div class="info"><span class="meta">Rechnungsdatum</span>{{ invoice.Issued | asDate }}</div>
                 <div class="info"><span class="meta">Rechnungsnummer</span>{{ invoice.Number }}</div>
                 <div class="info"><span class="meta">Betrag</span>{{ invoice.Total | currency }}</div>
                 <div class="info"><span class="meta">Bezahlbar bis</span>{{ invoice.Due | asDate }}</div>
@@ -113,7 +113,7 @@
      <table class="items">
         <template v-if="!Array.isArray(invoice.Items)">
          <tr>
-           <th>Description</th>
+           <th>Artikel</th>
            <th class="alright">Total</th>
          </tr>
          <tr>
@@ -123,9 +123,9 @@
        </template>
        <template v-else>
          <tr>
-           <th>Description</th>
-           <th class="alright">Unit Price</th>
-           <th class="alright">Quantity</th>
+           <th class="alright">Anzahl</th>
+           <th>Artikel</th>
+           <th class="alright">Einzelpreis</th>
            <th class="alright">Total</th>
          </tr>
          <tr v-for="item in invoice.Items">
@@ -143,7 +143,7 @@
          <div class="details">{{ invoice.Subtotal | currency }}</div>
        </div>
        <div class="part">
-         <div class="title">Taxes</div>
+         <div class="title">MWST</div>
          <div class="details">{{ invoice.Taxes | currency }}</div>
        </div>
        <div class="total">

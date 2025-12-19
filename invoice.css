@@ -31,7 +31,6 @@ a {
 }
 
 .title {
-font-size: 200%;
 font-weight: bold;
 }
 
@@ -75,7 +74,6 @@ font-weight: bold;
 
 .client .details, .summary .details {
   padding: 4px;
-  background-color: white;
 }
 
 /* Tables */
@@ -83,13 +81,11 @@ table {
   width: 100%;
   border: none;
   border-collapse: collapse;
-  padding: 0 0 5px 2px;
+  padding: 0 0 0.4em 0.2em
 }
 
 .kopf th, 
 .kopf td {
-  border: none;
-  border-collapse: collapse;
   padding-bottom: 0.8em;
   font-size: 13px;
 }
@@ -133,7 +129,6 @@ div.top {
 div.summary {
   display: flex;
   width: 100%;
-  padding: 0px;
   align-items: flex-end;
 }
 
@@ -148,22 +143,9 @@ div.summary .part {
 
 div.summary .total {
   display: block;
-  flex-grow: 1;
-  background: #000080;
-  font-size: 140%;
-}
+  font-weight: bold;}
 
-div.summary {
-  border-top-right-radius: 2em;
-  border-bottom-right-radius: 2em;
-}
-
-div.summary .total {
-  border-top-right-radius: 0.5em;
-  border-bottom-right-radius: 0.5em;
-}
-
-div.summary .title, div.summary .details {
+  div.summary .title, div.summary .details {
   text-align: right;
 }
 
