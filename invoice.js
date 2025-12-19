@@ -72,7 +72,7 @@ function addDemo(row) {
 const data = {
   count: 0,
   invoice: {},
-  tableConnected: false,
+    tableConnected: false,
   rowConnected: false,
   haveRows: false,
 };
