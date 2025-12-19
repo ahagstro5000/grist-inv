@@ -40,6 +40,37 @@
     </div>
     <div class="invoice" v-if="invoice">
       <template v-if="invoice">
+       <div class="supplier">
+          <div v-for="business in (invoice.Invoicer ? [invoice.Invoicer] : [])">
+             <template v-if="typeof(business) === 'string'">
+                <div class="address newlined">{{ business }}</div>
+             </template>
+             <template v-else>
+                <div class="address">
+                  <span class="name">{{ business.Name }}</span><br />
+                  {{ business.Street1 }}<br />
+                  <template v-if="business.Street2">
+                    {{ business.Street2 }}<br />
+                  </template>
+                    {{ business.Zip }} {{ business.City }} {{ business.State }}<br />
+                  <template v-if="business.Country">
+                    {{ business.Country }}<br />
+                  </template>
+                </div>
+                <template v-if="business.Email">
+                  <div class="email">{{ business.Email }}</div>
+                </template>
+                <template v-if="business.Phone">
+                  <div class="phone">{{ business.Phone }}</div>
+                </template>
+                <template v-if="business.Website">
+                  <div class="website"><a v-bind:href="business.Url">{{ business.Website }}</a></div>
+                </template>
+             </template>
+            </div>
+          </div>
+       </div>
+
         <table class="kopf">
           <tbody>
             <tr>
