@@ -9,7 +9,7 @@
 
   <!-- A template for showing an invoice in a Custom Widget in Grist. -->
   <!-- Uses Vue.js, moment, and the Grist Plugin API -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.7.16/vue.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.5.22/dist/vue.global.prod.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.10/moment.min.js" defer></script>
   <script src="https://docs.getgrist.com/grist-plugin-api.js" defer></script>
 
@@ -97,10 +97,10 @@
            </td>
            <td class="col-50">
              <div>
-                <div class="info"><span class="meta">Rechnungsdatum</span>{{ invoice.Issued | asDate }}</div>
+                <div class="info"><span class="meta">Rechnungsdatum</span>{{ asDate(invoice.Issued) }}</div>
                 <div class="info"><span class="meta">Rechnungsnummer</span>{{ invoice.Number }}</div>
-                <div class="info"><span class="meta">Betrag</span>{{ invoice.Total | currency }}</div>
-                <div class="info"><span class="meta">Bezahlbar bis</span>{{ invoice.Due | asDate }}</div>
+                <div class="info"><span class="meta">Betrag</span>{{ currency(invoice.Total) }}</div>
+                <div class="info"><span class="meta">Bezahlbar bis</span>{{ asDate(invoice.Due) }}</div>
                 <div class="info"><span class="meta">Kundenreferenz</span>{{ invoice.Kundenref }}</div>
               </div>
             </td>
@@ -119,7 +119,7 @@
          </tr>
          <tr>
            <td>{{ invoice.Items }}</td>
-           <td class="alright">{{ invoice.Total | currency }}</td>
+           <td class="alright">{{ currency(invoice.Total) }}</td>
          </tr>
        </template>
        <template v-else>
@@ -132,8 +132,8 @@
          <tr v-for="item in invoice.Items">
            <td class="alright">{{ item.Quantity }}</td>
            <td>{{ item.Description }}</td>
-           <td class="alright">{{ item.Price | currency }}</td>
-           <td class="alright">{{ item.Total | currency }}</td>
+           <td class="alright">{{ currency(item.Price) }}</td>
+           <td class="alright">{{ currency(item.Total) }}</td>
          </tr>
        </template>
      </table>
@@ -141,15 +141,15 @@
       <div class="summary">
        <div class="part">
          <div class="title">Subtotal</div>
-         <div class="details">{{ invoice.Subtotal | currency }}</div>
+         <div class="details">{{ currency(invoice.Subtotal) }}</div>
        </div>
        <div class="part">
          <div class="title">MWST</div>
-         <div class="details">{{ invoice.Taxes | currency }}</div>
+         <div class="details">{{ currency(invoice.Taxes) }}</div>
        </div>
        <div class="total">
          <div class="title">Total</div>
-         <div class="details">{{ invoice.Total | currency }}</div>
+         <div class="details">{{ currency(invoice.Total) }}</div>
        </div>
      </div>
 

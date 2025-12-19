@@ -79,7 +79,6 @@ const data = {
 };
 let app = undefined;
 
-Vue.filter('currency', formatNumberAsCHF)
 function formatNumberAsCHF(value) {
   if (typeof value !== "number") {
     return value || '—';      // falsy value would be shown as a dash.
@@ -96,20 +95,20 @@ function formatNumberAsCHF(value) {
   return result;
 }
 
-Vue.filter('fallback', function(value, str) {
+function fallback(value, str) {
   if (!value) {
     throw new Error("Please provide column " + str);
   }
   return value;
-});
+}
 
-Vue.filter('asDate', function(value) {
+function asDate(value) {
   if (typeof(value) === 'number') {
     value = new Date(value * 1000);
   }
   const date = moment.utc(value)
   return date.isValid() ? date.format('DD.MM.YYYY') : value;
-});
+}
 
 function tweakUrl(url) {
   if (!url) { return url; }
@@ -197,12 +196,14 @@ function updateInvoice(row) {
       row.Invoicer.Url = tweakUrl(row.Invoicer.Website);
     }
 
-    // Fiddle around with updating Vue (I'm not an expert).
-    for (const key of want) {
-      Vue.delete(data.invoice, key);
-    }
-    for (const key of ['Help', 'SuggestReferencesColumn', 'References']) {
-      Vue.delete(data.invoice, key);
+    // Remove keys from existing invoice object (Vue 3 no longer has Vue.delete).
+    if (data.invoice && typeof data.invoice === 'object') {
+      for (const key of want) {
+        if (key in data.invoice) { delete data.invoice[key]; }
+      }
+      for (const key of ['Help', 'SuggestReferencesColumn', 'References']) {
+        if (key in data.invoice) { delete data.invoice[key]; }
+      }
     }
     data.invoice = Object.assign({}, data.invoice, row);
 
@@ -231,17 +232,23 @@ ready(function() {
       }).catch(e => console.log(e));
     }
     if (msg.tableId) { app.tableConnected = true; }
-    if (msg.tableId && !msg.dataChange) { app.RowConnected = true; }
+    if (msg.tableId && !msg.dataChange) { app.rowConnected = true; }
   });
 
-  Vue.config.errorHandler = function (err, vm, info)  {
+  const vueApp = Vue.createApp({
+    data() { return data; },
+    methods: {
+      currency: formatNumberAsCHF,
+      fallback: fallback,
+      asDate: asDate
+    }
+  });
+
+  vueApp.config.errorHandler = function (err, vm, info) {
     handleError(err);
   };
 
-  app = new Vue({
-    el: '#app',
-    data: data
-  });
+  app = vueApp.mount('#app');
 
   if (document.location.search.includes('demo')) {
     updateInvoice(exampleData);
