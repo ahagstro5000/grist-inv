@@ -71,13 +71,15 @@ function addDemo(row) {
 
 const data = {
   count: 0,
-  invoice: {},
-    tableConnected: false,
+  invoice: '',
+  status: 'waiting',
+  tableConnected: false,
   rowConnected: false,
   haveRows: false,
 };
 let app = undefined;
 
+Vue.filter('currency', formatNumberAsCHF)
 function formatNumberAsCHF(value) {
   if (typeof value !== "number") {
     return value || '—';      // falsy value would be shown as a dash.
@@ -94,23 +96,20 @@ function formatNumberAsCHF(value) {
   return result;
 }
 
-function fallback(value, str) {
+Vue.filter('fallback', function(value, str) {
   if (!value) {
     throw new Error("Please provide column " + str);
   }
   return value;
-}
+});
 
-function asDate(value) {
-  if (value === undefined || value === null || value === '') {
-    return value || '—';
-  }
+Vue.filter('asDate', function(value) {
   if (typeof(value) === 'number') {
     value = new Date(value * 1000);
   }
   const date = moment.utc(value)
   return date.isValid() ? date.format('DD.MM.YYYY') : value;
-}
+});
 
 function tweakUrl(url) {
   if (!url) { return url; }
@@ -124,6 +123,7 @@ function handleError(err) {
   console.error(err);
   const target = app || data;
   target.invoice = '';
+  target.status = String(err).replace(/^Error: /, '');
   console.log(data);
 }
 
@@ -146,6 +146,7 @@ function prepareList(lst, order) {
 
 function updateInvoice(row) {
   try {
+    data.status = '';
     if (row === null) {
       throw new Error("(No data - not on row - please add or select a row)");
     }
@@ -196,14 +197,12 @@ function updateInvoice(row) {
       row.Invoicer.Url = tweakUrl(row.Invoicer.Website);
     }
 
-    // Remove keys from existing invoice object (Vue 3 no longer has Vue.delete).
-    if (data.invoice && typeof data.invoice === 'object') {
-      for (const key of want) {
-        if (key in data.invoice) { delete data.invoice[key]; }
-      }
-      for (const key of ['Help', 'SuggestReferencesColumn', 'References']) {
-        if (key in data.invoice) { delete data.invoice[key]; }
-      }
+    // Fiddle around with updating Vue (I'm not an expert).
+    for (const key of want) {
+      Vue.delete(data.invoice, key);
+    }
+    for (const key of ['Help', 'SuggestReferencesColumn', 'References']) {
+      Vue.delete(data.invoice, key);
     }
     data.invoice = Object.assign({}, data.invoice, row);
 
@@ -215,37 +214,34 @@ function updateInvoice(row) {
 }
 
 ready(function() {
-  // Update the invoice anytime the document data changes (if Grist is available).
-  if (typeof grist !== 'undefined' && grist) {
-    grist.ready();
-    grist.onRecord(updateInvoice);
-  } else {
-    console.log('grist not found - running in local preview');
-    // For local preview, show demo data so the invoice is visible. Only do this if
-    // exampleData is available.
-    if (typeof exampleData !== 'undefined') {
-      try {
-        updateInvoice(exampleData);
-      } catch (e) {
-        console.warn('Could not apply exampleData', e);
-      }
-    }
-  }
+  // Update the invoice anytime the document data changes.
+  grist.ready();
+  grist.onRecord(updateInvoice);
 
-  const vueApp = Vue.createApp({
-    data() { return data; },
-    methods: {
-      currency: formatNumberAsCHF,
-      fallback: fallback,
-      asDate: asDate
+  // Monitor status so we can give user advice.
+  grist.on('message', msg => {
+    // If we are told about a table but not which row to access, check the
+    // number of rows.  Currently if the table is empty, and "select by" is
+    // not set, onRecord() will never be called.
+    if (msg.tableId && !app.rowConnected) {
+      grist.docApi.fetchSelectedTable().then(table => {
+        if (table.id && table.id.length >= 1) {
+          app.haveRows = true;
+        }
+      }).catch(e => console.log(e));
     }
+    if (msg.tableId) { app.tableConnected = true; }
+    if (msg.tableId && !msg.dataChange) { app.RowConnected = true; }
   });
 
-  vueApp.config.errorHandler = function (err, vm, info) {
+  Vue.config.errorHandler = function (err, vm, info)  {
     handleError(err);
   };
 
-  app = vueApp.mount('#app');
+  app = new Vue({
+    el: '#app',
+    data: data
+  });
 
   if (document.location.search.includes('demo')) {
     updateInvoice(exampleData);

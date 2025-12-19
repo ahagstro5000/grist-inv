@@ -9,7 +9,7 @@
 
   <!-- A template for showing an invoice in a Custom Widget in Grist. -->
   <!-- Uses Vue.js, moment, and the Grist Plugin API -->
-  <script src="https://cdn.jsdelivr.net/npm/vue@3.5.22/dist/vue.global.prod.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.7.16/vue.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.10/moment.min.js" defer></script>
   <script src="https://docs.getgrist.com/grist-plugin-api.js" defer></script>
 
@@ -22,6 +22,25 @@
 <body>
   <div id="app">
     <div class="invoice" v-if="invoice">
+      <div class="status" v-if="status">
+        <template v-if="status === 'waiting'">
+          <p>Waiting for data...</p>
+          <ul>
+           <li v-bind:class="[tableConnected ? 'done' : '']">I need <b>read table</b> access.</li>
+           <li v-bind:class="[haveRows ? 'done' : '']">I need at least one row of data.</li>
+           <li v-bind:class="[rowConnected ? 'done' : '']">I need <b>Select By</b> set.</li>
+         </ul>
+         <p>Examples:</p>
+         <ul>
+           <li><a class="button" href="index.html?demo=1">A filled out invoice</a></li>
+           <li><a class="button" href="index.html?labels=1">A labelled invoice</a></li>
+         </ul>
+       </template>
+       <template v-else>
+         {{ status }}
+       </template>
+     </div>
+
       <table class="kopf">
        <tbody>
          <tr>
@@ -78,10 +97,10 @@
            </td>
            <td class="col-50">
              <div>
-                <div class="info"><span class="meta">Rechnungsdatum</span>{{ asDate(invoice.Issued) }}</div>
+                <div class="info"><span class="meta">Rechnungsdatum</span>{{ invoice.Issued | asDate }}</div>
                 <div class="info"><span class="meta">Rechnungsnummer</span>{{ invoice.Number }}</div>
-                <div class="info"><span class="meta">Betrag</span>{{ currency(invoice.Total) }}</div>
-                <div class="info"><span class="meta">Bezahlbar bis</span>{{ asDate(invoice.Due) }}</div>
+                <div class="info"><span class="meta">Betrag</span>{{ invoice.Total | currency }}</div>
+                <div class="info"><span class="meta">Bezahlbar bis</span>{{ invoice.Due | asDate }}</div>
                 <div class="info"><span class="meta">Kundenreferenz</span>{{ invoice.Kundenref }}</div>
               </div>
             </td>
@@ -100,7 +119,7 @@
          </tr>
          <tr>
            <td>{{ invoice.Items }}</td>
-           <td class="alright">{{ currency(invoice.Total) }}</td>
+           <td class="alright">{{ invoice.Total | currency }}</td>
          </tr>
        </template>
        <template v-else>
@@ -113,8 +132,8 @@
          <tr v-for="item in invoice.Items">
            <td class="alright">{{ item.Quantity }}</td>
            <td>{{ item.Description }}</td>
-           <td class="alright">{{ currency(item.Price) }}</td>
-           <td class="alright">{{ currency(item.Total) }}</td>
+           <td class="alright">{{ item.Price | currency }}</td>
+           <td class="alright">{{ item.Total | currency }}</td>
          </tr>
        </template>
      </table>
@@ -122,15 +141,15 @@
       <div class="summary">
        <div class="part">
          <div class="title">Subtotal</div>
-         <div class="details">{{ currency(invoice.Subtotal) }}</div>
+         <div class="details">{{ invoice.Subtotal | currency }}</div>
        </div>
        <div class="part">
          <div class="title">MWST</div>
-         <div class="details">{{ currency(invoice.Taxes) }}</div>
+         <div class="details">{{ invoice.Taxes | currency }}</div>
        </div>
        <div class="total">
          <div class="title">Total</div>
-         <div class="details">{{ currency(invoice.Total) }}</div>
+         <div class="details">{{ invoice.Total | currency }}</div>
        </div>
      </div>
 

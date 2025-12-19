@@ -281,3 +281,23 @@ div.column-name {
   padding: 0.25em;
   margin-left: 1em;
 }
+
+
+
+.status {
+  padding: 4px;
+}
+
+.status .button {
+  display: inline-block;
+  text-decoration: none;
+  color: #000080;
+  background: #ddd;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  border-radius: 0.25em;
+}
