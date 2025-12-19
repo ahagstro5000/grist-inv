@@ -29,7 +29,10 @@ function addDemo(row) {
       Zip: '.Zip',
       Email: 'Invoicer.Email',
       Phone: 'Invoicer.Phone',
-      Website: 'Invoicer.Website'
+      Website: 'Invoicer.Website',
+      Konto: 'Invoicer.Konto',
+      MWSTNr: 'Invoicer.MWSTNr',
+
     }
   }
   if (!row.Client) {
@@ -39,7 +42,8 @@ function addDemo(row) {
       Street2: 'Client.Street2',
       City: 'Client.City',
       State: '.State',
-      Zip: '.Zip'
+      Zip: '.Zip',
+      Kundenref: 'Client.Kundenref',
     }
   }
   if (!row.Items) {
@@ -159,7 +163,7 @@ function updateInvoice(row) {
     const want = new Set(Object.keys(addDemo({})));
     const accepted = new Set(['References']);
     const importance = ['Number', 'Client', 'Items', 'Total', 'Invoicer', 'Due', 
-                        'Issued', 'Subtotal', 'Taxes', 'Note', 'Paid'];
+                        'Issued', 'Subtotal', 'Taxes', 'Note', 'Kundenref'];
     if (!('Due' in row || 'Issued' in row)) {
       const seen = new Set(Object.keys(row).filter(k => k !== 'id' && k !== '_error_'));
       const help = row.Help = {};
