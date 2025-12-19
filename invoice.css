@@ -112,12 +112,9 @@ table {
   text-align: right;
 }
 
-.name {
-  color: #000080;
-}
-
 .address {
   padding-bottom: 1em;
+  color: #000;
 }
 
 div.date-tag {
